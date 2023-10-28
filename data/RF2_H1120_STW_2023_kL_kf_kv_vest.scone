@@ -1,0 +1,829 @@
+$kF = ~0.2<-10,10>
+$kV = ~0.2<-10,10> #~0<...>"
+
+#normal set:
+$neu_del_10 = 0.010
+$neu_del_15 = 0.015
+$neu_del_20 = 0.020
+$neu_del_25 = 0.025
+$neu_del_35 = 0.035
+
+# vestibular delays
+$ves_delay_40 = 0.040
+$ves_delay_45 = 0.045
+$ves_delay_55 = 0.055
+$ves_delay_lumbar = 0.035
+$ves_delay_thorax = 0.030
+
+
+
+########## lower limb reflexcontroller ##########
+Controller {
+	type = CompositeController
+	name = RF2
+	#auto_std_factor = 0.05
+	
+	Controller {
+		type = ReflexController
+		symmetric = 0
+		dual_sided = 0
+		
+		###### HIP REFLEXES######
+		## Iliacus ##
+		# mono
+		MuscleReflex {
+			target = iliacus_r
+			KL = ~0.24<0,10>
+			delay = $neu_del_10
+			KF = $kF
+			KV = $kV
+			C0 = ~0.1<-1,1>
+		}
+		
+		# anta
+		MuscleReflex {
+			target = iliacus_r
+			source = glut_max_r
+			KL = ~-0.01<-10,0>
+			KF = $kF
+			KV = $kV
+			delay = $neu_del_10
+			
+		}
+		
+		# vestibular 
+		DofReflex {
+			target = iliacus_r
+			source = pelvis_tilt 
+			delay = $ves_delay_40
+			KP = "~0.05<-10,10>"
+			KV = "~0.05<-10,10>"
+			P0 = "~0.05<-1,1>"
+		}
+		
+		# mono
+		MuscleReflex {
+			target = iliacus_l
+			KL = ~0.24<0,10>
+			delay = $neu_del_10
+			KF = $kF
+			KV = $kV
+			C0 = ~0.1<-1,1>
+		}
+		
+		#anta
+		MuscleReflex {
+			target = iliacus_l
+			source = glut_max_l
+			KL = ~-0.55<-10,0>
+			KF = $kF
+			KV = $kV
+			delay = $neu_del_10
+			
+		}
+		
+		# vestibular feedback
+		DofReflex {
+			target = iliacus_l
+			source = pelvis_tilt 
+			delay = $ves_delay_40
+			KP = "~0.05<-10,10>"
+			KV = "~0.05<-10,10>"
+			P0 = "~0.05<-1,1>"
+		}
+		
+		## Psoas ##
+		
+		#mono
+		MuscleReflex {
+			target = psoas_r
+			KL = ~0.24<0,10>
+			delay = $neu_del_10
+			KF = $kF
+			KV = $kV
+			C0 = ~0.1<-1,1>
+		}
+		
+		#anta
+		MuscleReflex {
+			target = psoas_r
+			source = glut_max_r
+			KL = ~-0.01<-10,0>
+			KF = $kF
+			KV = $kV
+			delay = $neu_del_10
+			
+		}
+		
+		# vestibular feedback
+		DofReflex {
+			target = psoas_r
+			source = pelvis_tilt 
+			delay = $ves_delay_40
+			KP = "~0.05<-10,10>"
+			KV = "~0.05<-10,10>"
+			P0 = "~0.05<-1,1>"
+		}
+		
+		#mono
+		MuscleReflex {
+			target = psoas_l
+			KL = ~0.24<0,10>
+			delay = $neu_del_10
+			KF = $kF
+			KV = $kV
+			C0 = ~0.1<-1,1>
+		}
+		
+		#anta
+		MuscleReflex {
+			target = psoas_l
+			source = glut_max_l
+			KL = ~-0.55<-10,0>
+			KF = $kF
+			KV = $kV
+			delay = $neu_del_10
+			
+		}
+		
+		# vestibular feedback	
+		DofReflex {
+			target = psoas_l
+			source = pelvis_tilt 
+			delay = $ves_delay_40
+			KP = "~0.05<-10,10>"
+			KV = "~0.05<-10,10>"
+			P0 = "~0.05<-1,1>"
+		}
+		
+	
+		
+		## Gluteus Maximus ##
+		#mono
+		MuscleReflex {
+			target = glut_max_l
+			KL = ~0.6<0,10> 
+			delay = $neu_del_10
+			KF = $kF
+			KV = $kV
+			C0 = ~-0.70<-1,1>
+		}
+		
+		#anta
+		MuscleReflex {
+			target = glut_max_l
+			source = iliacus_l
+			KL = ~-1.03<-10,0>
+			KF = $kF
+			KV = $kV
+			delay = $neu_del_10
+		
+		}
+		
+		MuscleReflex {
+			target = glut_max_l
+			source = psoas_l
+			KL = ~-1.03<-10,0>
+			delay = $neu_del_10
+			KF = $kF
+			KV = $kV
+		
+		}
+		
+		# vestibular feedback
+		DofReflex {
+			target = glut_max_l
+			source = pelvis_tilt 
+			delay = $ves_delay_40
+			KP = "~0.05<-10,10>"
+			KV = "~0.05<-10,10>"
+			P0 = "~0.05<-1,1>"
+		}
+		
+		
+		#mono
+		MuscleReflex {
+			target = glut_max_r
+			KL = ~0.1<0,10> #was 0.93
+			delay = $neu_del_10
+			KF = $kF
+			KV = $kV
+			C0 = ~-0.8<-1,1>
+		}
+		
+		#anta 		
+		MuscleReflex {
+			target = glut_max_r
+			source = iliacus_r
+			KL = ~-0.33<-10,0>
+			delay = $neu_del_10
+			KF = $kF
+			KV = $kV
+		
+		}
+		
+		MuscleReflex {
+			target = glut_max_r
+			source = psoas_r
+			KL = ~-0.33<-10,0>
+			delay = $neu_del_10
+			KF = $kF
+			KV = $kV
+		
+		}
+		
+		# vestibular feedback
+		DofReflex {
+			target = glut_max_r
+			source = pelvis_tilt 
+			delay = $ves_delay_40
+			KP = "~0.05<-10,10>"
+			KV = "~0.05<-10,10>"
+			P0 = "~0.05<-1,1>"
+		}
+		
+		## Rectus Femoris ##
+		# mono
+		MuscleReflex {
+			target = rect_fem_l
+			KL = ~1.54<0,10>
+			delay = $neu_del_20
+			KF = $kF
+			KV = $kV
+			C0 = ~0.18<-1,1>
+		}
+		
+		# anta
+		
+		MuscleReflex {
+			target = rect_fem_l
+			source = hamstrings_l
+			KL = ~-0.60<-10,0>
+			delay = $neu_del_20
+			KF = $kF
+			KV = $kV
+			
+		}
+		
+		MuscleReflex {
+			source = rect_fem_l
+			target = bifemsh_l
+			delay = $neu_del_20
+			KL = ~-0.1<-10,0>
+			KF = $kF
+			KV = $kV
+		}
+		
+		# vestibular feedback
+		DofReflex {
+			target = rect_fem_l
+			source = pelvis_tilt 
+			delay = $ves_delay_45
+			KP = "~0.05<-10,10>"
+			KV = "~0.05<-10,10>"
+			P0 = "~0.05<-1,1>"
+		}
+		
+		# mono
+		MuscleReflex {
+			target = rect_fem_r
+			KL = ~0.91<0,10>
+			delay = $neu_del_20
+			KF = $kF
+			KV = $kV
+			C0 = ~1<-1,1>
+		}
+		
+		
+		# anta
+		MuscleReflex {
+			target = rect_fem_r
+			source = hamstrings_r
+			KL = ~-0.09<-10,0>
+			delay = $neu_del_20
+			KF = $kF
+			KV = $kV
+			
+		}
+		
+		MuscleReflex {
+			source = rect_fem_r
+			target = bifemsh_r
+			delay = $neu_del_20
+			KL = ~-0.1<-10,0>
+			KF = $kF
+			KV = $kV
+		}
+		
+		# vestibular feedback
+		DofReflex {
+			target = rect_fem_r
+			source = pelvis_tilt 
+			delay = $ves_delay_45
+			KP = "~0.05<-10,10>"
+			KV = "~0.05<-10,10>"
+			P0 = "~0.05<-1,1>"
+		}
+		
+			
+		
+		## Hamstrings ##
+		
+		#mono
+		MuscleReflex {
+			target = hamstrings_l
+			KL = ~1.72<0,10>
+			delay = $neu_del_15
+			KF = $kF
+			KV = $kV
+			C0 = ~0.01<-1,1>
+		}
+		
+		# anta
+		MuscleReflex {
+			target = hamstrings_l
+			source = rect_fem_l
+			KL = ~-0.24<-10,0>
+			delay = $neu_del_20
+			KF = $kF
+			KV = $kV
+			
+		}
+		
+		MuscleReflex {
+			target = hamstrings_l
+			source = vasti_l
+			KL = ~-0.90<-10,0>
+			delay = $neu_del_20
+			KF = $kF
+			KV = $kV
+			
+		}
+		
+		# vestibular feedback
+		DofReflex {
+			target = hamstrings_l
+			source = pelvis_tilt 
+			delay = $ves_delay_45
+			KP = "~0.05<-10,10>"
+			KV = "~0.05<-10,10>"
+			P0 = "~0.05<-1,1>"
+		}
+		
+		
+		# mono
+		MuscleReflex {
+			target = hamstrings_r
+			KL = ~0.92<0,10>
+			delay = $neu_del_15
+			KF = $kF
+			KV = $kV
+			C0 = ~-0.95<-1,1>
+		}
+		
+		# anta
+		MuscleReflex {
+			target = hamstrings_r
+			source = rect_fem_r
+			KL = ~-0.37<-10,0>
+			delay = $neu_del_20
+			KF = $kF
+			KV = $kV
+			
+		}
+		
+		MuscleReflex {
+			target = hamstrings_r
+			source = vasti_r
+			KL = ~-0.09<-10,0>
+			delay = $neu_del_20
+			KF = $kF
+			KV = $kV
+			
+		}
+		
+		# vestibular feedback
+		
+		DofReflex {
+			target = hamstrings_r
+			source = pelvis_tilt 
+			delay = $ves_delay_45
+			KP = "~0.05<-10,10>"
+			KV = "~0.05<-10,10>"
+			P0 = "~0.05<-1,1>"
+		}
+		
+		
+		
+		## Biceps Femoris Shorthead ##
+		
+		# mono
+		MuscleReflex {
+			target = bifemsh_l
+			KL = ~0.1<-10,10>
+			delay = $neu_del_20
+			KF = $kF
+			KV = $kV
+			C0 = ~0.2<-1,1>
+		}
+		
+		# anta
+		
+		MuscleReflex {
+			source = bifemsh_l
+			target = rect_fem_l
+			delay = $neu_del_20
+			KL = ~-0.25<-10,0>
+			KF = $kF
+			KV = $kV
+		}
+		
+		MuscleReflex {
+			source = bifemsh_l
+			target = vasti_l
+			delay = $neu_del_20
+			KL = ~-0.25<-10,0>
+			KF = $kF
+			KV = $kV
+		}
+		
+		# vestibular 
+		DofReflex {
+			target = bifemsh_l
+			source = pelvis_tilt 
+			delay = $ves_delay_45
+			KP = "~0.05<-10,10>"
+			KV = "~0.05<-10,10>"
+			P0 = "~0.05<-1,1>"
+		}
+		
+		# mono
+		MuscleReflex {
+			target = bifemsh_r
+			KL = ~0.1<-10,10>
+			delay = $neu_del_20
+			KF = $kF
+			KV = $kV
+			C0 = ~0.2<-1,1>
+		}
+			
+		# anta 
+		MuscleReflex {
+			source = bifemsh_r
+			target = rect_fem_r
+			delay = $neu_del_20
+			KL = ~-0.1<-10,0>
+			KF = $kF
+			KV = $kV
+		}
+		
+		MuscleReflex {
+			source = bifemsh_r
+			target = vasti_r
+			delay = $neu_del_20
+			KL = ~-0.1<-10,0>
+			KF = $kF
+			KV = $kV
+		}
+		
+		# vestibular 
+		DofReflex {
+			target = bifemsh_r
+			source = pelvis_tilt 
+			delay = $ves_delay_45
+			KP = "~0.05<-10,10>"
+			KV = "~0.05<-10,10>"
+			P0 = "~0.05<-1,1>"
+		}
+		
+		
+	
+		### KNEE REFLEXES ###
+		
+		## Vasti ##
+		
+		# mono
+		MuscleReflex {
+			target = vasti_l
+			KL = ~1.47<0,10>
+			KF = $kF
+			KV = $kV
+			C0 = ~-0.36<-1,1>
+			delay = $neu_del_20
+		}
+		
+		# anta
+		MuscleReflex {
+			target = vasti_l
+			source = hamstrings_l
+			KL = ~-0.04<-10,0>
+			delay = $neu_del_20
+			KF = $kF
+			KV = $kV
+			
+		}
+		
+		MuscleReflex {
+			source = vasti_l
+			target = bifemsh_l
+			delay = $neu_del_20
+			KL = ~-0.2<-10,0>
+			KF = $kF
+			KV = $kV
+		}
+		
+		# vestibular 
+		DofReflex {
+			target = vasti_l
+			source = pelvis_tilt 
+			delay = $ves_delay_45
+			KP = "~0.05<-10,10>"
+			KV = "~0.05<-10,10>"
+			P0 = "~0.05<-1,1>"
+		}
+		
+		# mono
+		MuscleReflex {
+			target = vasti_r
+			KL = ~0.99<0,10>
+			KF = $kF
+			KV = $kV
+			C0 = ~-0.72<-1,1>
+			delay = $neu_del_20
+		}
+		
+		# anta
+		MuscleReflex {
+			target = vasti_r
+			source = hamstrings_r
+			KL = ~-0.06<-10,0>
+			delay = $neu_del_20
+			KF = $kF
+			KV = $kV
+			
+		}
+		
+		MuscleReflex {
+			source = vasti_r
+			target = bifemsh_r
+			delay = $neu_del_20
+			KL = ~-0.1<-10,0>
+			KF = $kF
+			KV = $kV
+		}
+		
+		# vestibular 
+		DofReflex {
+			target = vasti_r
+			source = pelvis_tilt 
+			delay = $ves_delay_45
+			KP = "~0.05<-10,10>"
+			KV = "~0.05<-10,10>"
+			P0 = "~0.05<-1,1>"
+		}
+
+		## Gastrocnemius ##
+		
+		# mono
+		MuscleReflex {
+			target = gastroc_l
+			KL =~0.41<0,10>
+			KF = $kF
+			KV = $kV
+			C0 = ~0.48<-1,1>
+			delay = $neu_del_35
+		}
+		
+		# anta
+		MuscleReflex {
+			target = gastroc_l
+			source = tib_ant_l
+			KL = ~-0.53<-10,0>
+			delay = $neu_del_35
+			KF = $kF
+			KV = $kV
+			
+		}
+		
+		# vestibular 
+		DofReflex {
+			target = gastroc_l
+			source = pelvis_tilt 
+			delay = $ves_delay_55
+			KP = "~0.05<-10,10>"
+			KV = "~0.05<-10,10>"
+			P0 = "~0.05<-1,1>"
+		}
+		
+		# mono
+		MuscleReflex {
+			target = gastroc_r
+			KL = ~1.24<0,10>
+			KF = $kF
+			KV = $kV
+			C0 = ~0.63<-1,1>
+			delay = $neu_del_35
+		}
+		
+		# anta
+		MuscleReflex {
+			target = gastroc_r
+			source = tib_ant_r
+			KL = ~-0.11<-10,0>
+			delay = $neu_del_35
+			KF = $kF
+			KV = $kV
+			
+		}
+		
+		# vestibular 
+		DofReflex {
+			target = gastroc_r
+			source = pelvis_tilt 
+			delay = $ves_delay_55
+			KP = "~0.05<-10,10>"
+			KV = "~0.05<-10,10>"
+			P0 = "~0.05<-1,1>"
+		}
+		
+		## Tibialis Anterior ##
+		# mono
+		MuscleReflex {
+			target = tib_ant_l
+			KL = ~0.91<0,10>
+			KF = $kF
+			KV = $kV
+			C0 = ~0.67<-1,1>
+			delay = $neu_del_35
+		}
+		
+		# anta
+		MuscleReflex {
+			target = tib_ant_l
+			source = gastroc_l
+			KL = ~-1.26<-10,0>
+			delay = $neu_del_35
+			KF = $kF
+			KV = $kV
+			
+		}
+		
+		MuscleReflex {
+			target = tib_ant_l
+			source = soleus_l
+			KL = ~-0.35<-10,0>
+			delay = $neu_del_35
+			KF = $kF
+			KV = $kV
+			
+		}
+		
+		# vestibular 
+		DofReflex {
+			target = tib_ant_l
+			source = pelvis_tilt 
+			delay = $ves_delay_55
+			KP = "~0.05<-10,10>"
+			KV = "~0.05<-10,10>"
+			P0 = "~0.05<-1,1>"
+		}
+		
+		# mono
+		MuscleReflex {
+			target = tib_ant_r
+			KL = ~1.02<0,10>
+			KF = $kF
+			KV = $kV
+			C0 = ~1<-1,1>
+			delay = $neu_del_35
+		}
+		
+		# anta
+		MuscleReflex {
+			target = tib_ant_r
+			source = gastroc_r
+			KL = ~-1.04<-10,0>
+			delay = $neu_del_35
+			KF = $kF
+			KV = $kV
+			
+		}
+		
+		MuscleReflex {
+			target = tib_ant_r
+			source = soleus_r
+			KL = ~-0.67<-10,0>
+			delay = $neu_del_35
+			KF = $kF
+			KV = $kV
+			
+		}
+		
+		# vestibular 
+		DofReflex {
+			target = tib_ant_r
+			source = pelvis_tilt 
+			delay = $ves_delay_55
+			KP = "~0.05<-10,10>"
+			KV = "~0.05<-10,10>"
+			P0 = "~0.05<-1,1>"
+		}
+		
+		## Soleus ##
+		
+		# mono
+		MuscleReflex {
+			target = soleus_l
+			KL = ~0.03<0,10>
+			delay = $neu_del_35
+			KF = $kF
+			KV = $kV
+			C0 = ~-0.15<-1,1>
+		}
+		
+		# anta
+		MuscleReflex {
+			target = soleus_l
+			source = tib_ant_l
+			KL = ~-0.26<-10,0>
+			delay = $neu_del_35
+			KF = $kF
+			KV = $kV
+			
+		}
+		
+		# vestibular 
+		DofReflex {
+			target = soleus_l
+			source = pelvis_tilt 
+			delay = $ves_delay_55
+			KP = "~0.05<-10,10>"
+			KV = "~0.05<-10,10>"
+			P0 = "~0.05<-1,1>"
+		}
+		
+		# mono
+		MuscleReflex {
+			target = soleus_r
+			KL = ~1.52<0,10>
+			delay = $neu_del_35
+			KF = $kF
+			KV = $kV
+			C0 = ~-0.21<-1,1>
+		}
+		
+		# anta
+		MuscleReflex {
+			target = soleus_r
+			source = tib_ant_r
+			KL = ~-0.07<-10,0>
+			delay = $neu_del_35
+			KF = $kF
+			KV = $kV
+			
+		}
+		
+		# vestibular 
+		DofReflex {
+			target = soleus_r
+			source = pelvis_tilt 
+			delay = $ves_delay_55
+			KP = "~0.05<-10,10>"
+			KV = "~0.05<-10,10>"
+			P0 = "~0.05<-1,1>"
+		}
+
+	}
+	
+	### Upper Limb Torque Driven control
+	
+	Controller {
+		type = ReflexController
+		name = torso_joints
+		dual_sided = 0
+		#auto_std_factor = 0.05
+		
+		BodyOrientationReflex{
+			target = lumbar_extension
+			source = lumbar
+			delay = $ves_delay_lumbar
+			KP = ~100<0,500>
+			KV = ~20<0,50>
+			P0 = -0.105~0.001<-0.5,0.5>
+	
+		}
+							
+		BodyOrientationReflex{
+			target = thorax_extension
+			source = thorax
+			delay = $ves_delay_thorax
+			KP = ~100<0,500>
+			KV = ~20<0,50>
+			P0 = -0.105~0.001<-0.5,0.5>
+	
+		}
+		
+			
+		
+	}
+}

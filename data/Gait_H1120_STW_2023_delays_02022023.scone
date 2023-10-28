@@ -1,0 +1,290 @@
+	
+#normal set:
+$neu_del_10 = 0.010
+$neu_del_15 = 0.015
+$neu_del_20 = 0.020
+$neu_del_25 = 0.025
+$neu_del_35 = 0.035
+
+#vestibular delays
+$ves_delay_40 = 0.040
+$ves_delay_45 = 0.045
+$ves_delay_55 = 0.055
+$ves_delay_lumbar = 0.035
+$ves_delay_thorax = 0.030
+	
+	GaitStateController {
+				name = GAIT2
+				signature_postfix = GH1120_STW
+				#auto_std_factor = 0.05
+				stance_load_threshold = "~0.1<0.001,1>"
+				leg_load_sensor_delay = 0
+				symmetric = 1
+				ConditionalControllers {
+				
+				ConditionalController {
+						states = "EarlyStance LateStance Liftoff Swing Landing"
+						
+						
+
+						ReflexController {	
+							name = torso_joints
+							dual_sided = 0
+							
+							BodyOrientationReflex{
+								target = lumbar_extension
+								source = lumbar
+								delay = $ves_delay_lumbar
+								KP = "~100<0,500>"
+								KV = "~20<0,50>"
+								P0 = "-0.105~0.001<-0.5,0.5>"
+	
+							}
+							
+							BodyOrientationReflex{
+								target = thorax_extension
+								source = thorax
+								delay = $ves_delay_thorax
+								KP = ~100<0,500>
+								KV = ~20<0,50>
+								P0 = -0.105~0.001<-0.5,0.5>
+	
+							}
+							
+							
+						}
+					}
+				
+				
+				
+				
+				
+					ConditionalController {
+						states = "EarlyStance LateStance Liftoff Swing Landing"
+						
+						ReflexController {
+							MuscleReflex {
+								target = tib_ant
+								delay = $neu_del_35
+								KL = "~1.7<-10,10>" #was 1.9
+								L0 = "~0.7<0,2>"
+							}
+							MuscleReflex {
+								target = tib_ant
+								source = soleus
+								delay = $neu_del_35
+								KF = "~-0.2<-10,10>"
+							}
+							
+							
+							
+						}
+						
+					}
+						
+						
+					
+					ConditionalController {
+						states = "EarlyStance LateStance Liftoff"
+						ReflexController {
+							MuscleReflex { target = soleus delay = $neu_del_35 KF = "~1<-10,10>" }
+							MuscleReflex { target = gastroc delay = $neu_del_35 KF = "~2<-10,10>" } #was 6.7
+							
+						}
+					}
+					ConditionalController {
+						states = "EarlyStance LateStance"
+						ReflexController {
+							Reflexes {
+								ConditionalMuscleReflex {
+									target = vasti
+									delay = $neu_del_20
+									KF = "~1.5<-10,10>"
+									C0 = "~0.15<-1,1>"
+									dof = knee_angle
+									pos_max = "~-0.1<-1,0>"
+								}
+								DofReflex {
+									target = hamstrings
+									source = pelvis_tilt
+									delay = $ves_delay_45
+									KP = "~2.5<-10,10>" # was 3.99
+									KV = "~0.15<-10,10>"
+									P0 = -0.105
+									C0 = "~0.06<-1,1>"
+								}
+								DofReflex {
+									target = glut_max
+									source = pelvis_tilt
+									delay = $ves_delay_40
+									KP = "~1.4<-10,10>"
+									KV = "~0.8<-10,10>"
+									P0 = -0.105
+									C0 = "~-0.11<-1,1>"
+								}
+								DofReflex {
+									target = iliacus
+									source = pelvis_tilt
+									delay = $ves_delay_40
+									KP = "~-1<-10,10>"
+									KV = "~-0.2<-10,10>"
+									P0 = -0.105
+									C0 = "~0.06<-1,1>"
+								}
+																						
+								# Vestibular control
+								DofReflex {
+									target = psoas
+									source = pelvis_tilt 
+									delay = $ves_delay_40
+									KP = "~1.7<-10,10>"
+									KV = "~0.6<-10,10>"
+									P0 = "~-0.6<-1,1>"
+								}
+								
+								
+								
+								
+								
+								# Balance reflex for rect_fem (not in [GH2010])
+								DofReflex {
+									target = rect_fem
+									source = pelvis_tilt
+									delay = $ves_delay_45
+									KP = ~-2.3<-10,10> # -k_p
+									KV = ~-0.14<-10,10> # -k_d
+									P0 = -0.105 # theta_ref, not optimized because of C0
+									C0 = ~0.08<-1,1> # S_0,BAL
+								}
+								
+								# Reflexes for rect_fem (not in [GH2010]) - Stance
+								MuscleReflex {
+								target = rect_fem
+								delay = $neu_del_20
+								KL = ~1.4<-10,10>
+								L0 = 1.0~0.01<0,2>
+								KF = ~1.5<-10,10>
+								#KV = $kV
+							}
+							
+							# reflex for bifemsh (not in [GH2010]) - Stance
+							MuscleReflex {
+								target = bifemsh
+								delay = $neu_del_20
+								KL = ~1.4<-10,10>
+								L0 = 1.0~0.01<0,2>
+								KF = ~0.65<-10,10>
+							}
+								
+							}
+						}
+					}
+					ConditionalController {
+						states = Liftoff
+						ReflexController {
+							MuscleReflex { target = iliacus delay = $neu_del_10 C0 = "~0.75<-1,1>" }
+							MuscleReflex { target = psoas delay = $neu_del_10 C0 = "~0.75<-1,1>" }
+							MuscleReflex { target = glut_max delay = $neu_del_10 C0 = "~-0.25<-1,1>" }
+							
+							# Reflexes for rect_fem (not in [GH2010]) - Lift-off
+								MuscleReflex {
+								target = rect_fem
+								delay = $neu_del_20
+								KL = ~1.4<-10,10>
+								L0 = 1.0~0.01<0,2>
+								KF = ~1.5<-10,10>
+								#KV = $kV
+							}
+							
+							# reflex for bifemsh (not in [GH2010]) - Lift-off
+							MuscleReflex {
+								target = bifemsh
+								delay = $neu_del_20
+								KL = ~1.4<-10,10>
+								L0 = 1.0~0.01<0,2>
+								KF = ~0.65<-10,10>
+							}
+						}
+					}
+					ConditionalController {
+						states = "Swing Landing"
+						ReflexController {
+							MuscleReflex {
+								target = iliacus
+								delay = $neu_del_10
+								KL = "~0.16<-10,10>" # was 1.23
+								L0 = "~0.5<0,2>" # was 1.03
+							}
+							
+							MuscleReflex {
+								target = psoas
+								KL = ~0.08<0,10>
+								delay = $neu_del_10
+								L0 = "~1.8<0,2>"
+							}
+							
+							
+							
+							DofReflex {
+								target = iliacus
+								source = pelvis_tilt
+								delay = $ves_delay_40
+								KP = "~-0.13<-10,10>"
+								KV = "~-0.12<-10,10>"
+								P0 = "~-0.09<-1,1>"
+							}
+							
+							DofReflex {
+								target = psoas
+								source = pelvis_tilt 
+								delay = $ves_delay_40
+								KP = "~1.7<-10,10>"
+								KV = "~0.6<-10,10>"
+								P0 = "~-0.6<-1,1>"
+							}
+							
+							
+							MuscleReflex {
+								target = iliacus
+								source = hamstrings
+								delay = $neu_del_15
+								KL = "~-0.3<-10,10>"
+								L0 = "~0.8<0,2>"
+							}
+							
+							
+							
+							
+														
+							
+							
+							
+							
+							
+							MuscleReflex { target = hamstrings delay = $neu_del_15 KF = "~-0.06<-10,10>" }
+							MuscleReflex { target = glut_max delay = $neu_del_10 KF = "~-0.5<-10,10>" }
+							
+							# Reflexes for rect_fem (not in [GH2010]) - Swing & Landing
+							MuscleReflex {
+								target = rect_fem
+								delay = $neu_del_20
+								KL = ~1.4<-10,10>
+								L0 = 1.0~0.01<0,2>
+								KF = ~-0.06<-10,10>
+								#KV = $kV
+							}
+							
+							# reflex for bifemsh (not in [GH2010]) - Swing & Landing
+							MuscleReflex {
+								target = bifemsh
+								delay = $neu_del_20
+								KL = ~1.4<-10,10>
+								L0 = 1.0~0.01<0,2>
+								KF = ~0.65<-10,10>
+							}
+							
+							
+						}
+					}
+				}
+			}

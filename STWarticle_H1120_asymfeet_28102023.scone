@@ -1,0 +1,179 @@
+CmaOptimizer {
+	signature_prefix = NormalSeatSTW_HeadAcc_12s_HS_DATE_TIME
+	max_errors = 10
+	
+	# init file normal seat
+	init{file ="data/init_files/AsymFeet.par"}
+	
+	
+	min_progress = 1e-4
+	#use_init_file_std = false 
+	#init_file_std_offset = 0.05
+	#init_file_std_factor = 0.2
+	
+	
+	SimulationObjective {
+		max_duration = 12 
+		
+		# Model used in simulation
+		ModelHyfydy {
+			
+			signature_postfix = HFD
+			model_file = data/H1120_STW_normalseat_10MPa.hfd		
+			
+			# Init posture	
+			state_init_file = data/BasedOnLessDeg_P1242_C101_InitState_adj4_SH_044_asym_rev_Feb22.zml	
+			initial_load = 1
+			
+			
+			<< data/HfdConfigPlanarMotorCollisionV2.zml >>
+		}
+		
+		# Controller for STW, based on [Geyer & Herr 2010]
+		SequentialController{
+			transition_intervals = ["0.2~0.01<0.2,2>" "0.30~0.01<0.1,1.5>"]		
+			
+			
+			# reflexcontroller 1		
+			<< data/RF1_H1120_STW_2023_kL_kf_kv_vest.scone >>
+			
+			
+			# reflexcontroller 2
+			<< data/RF2_H1120_STW_2023_kL_kf_kv_vest.scone >>	
+			
+			# Gait controller
+			<< data/Gait_H1120_STW_2023_delays_02022023.scone >>
+			
+		}
+		
+		# Measure for STW
+		CompositeMeasure {
+			
+			
+			MimicMeasure {
+				file = data/P1242_C101.sto
+				name = mimic_measure 	
+				weight = 1000
+				threshold = 0.015
+				include_states = pelvis.pos.y;pelvis.pos.x;
+				stop_time = 0.8
+			}		
+			Measure{
+				type = DofMeasure
+				dof = lumbar_extension
+				name = lumbar_penalty_1
+				position{min = -60 max=0 squared_penalty=1}
+				weight = 0.02
+				stop_time = 1
+			}
+			
+			Measure{
+				type = DofMeasure
+				dof = thorax_extension
+				name = thorax_penalty
+				position{min = -15 max=15 squared_penalty=1}
+				weight = 0.02
+			}
+			
+			Measure{
+				type = DofMeasure
+				dof = pelvis_tilt
+				name = pelvis_penalty
+				position{min = -50 max = 30 squared_penalty=1}
+				weight = 0.1			
+				threshold = 0.03
+			}
+			
+			
+			
+			CompositeMeasure {
+				GaitMeasure {
+					
+					name = Gait
+					weight = 10
+					initiation_steps = 3
+					threshold = 0.05
+					termination_height = 1.2
+					min_velocity = 0.8
+					start_time = 1.2
+					stop_time = 6
+					
+				}
+				
+				EffortMeasure {
+					name = Effort_STW_cubmuscle
+					measure_type = CubedMuscleActivation
+					weight = 0.1
+				}			
+				
+				ReactionForceMeasure {
+					name = GRF
+					start_time = 1
+					weight = 0.1
+					max = 1.4
+					abs_penalty = 1
+					
+				}
+				
+			 EffortMeasure {
+					name = Effort
+					weight = 0.01
+					measure_type = Wang2012
+					use_cost_of_transport = 1
+				}		
+				
+				EffortMeasure{
+					name = MotorTorque
+					weight = 0.0003
+					measure_type = MotorTorque
+					order = 2
+					use_cost_of_transport = 1					
+					
+				}
+				
+				
+				BodyMeasure {
+					name = headACC
+					body = thorax
+					acceleration { min = -1 max = 1 squared_penalty = 1 }
+					start_time = 1.2
+					stop_time = 12
+					weight = 10
+					threshold = 1
+				}
+				
+				
+				CompositeMeasure {
+					name = DofLimits
+					symmetric = 1
+					stop_time = 15
+					DofMeasure {
+						weight = 0.1
+						dof = ankle_angle
+						position { min = -60 max = 60 squared_penalty = 1 }
+					}
+					
+					DofMeasure {
+						weight = 0.1
+						dof = lumbar_extension
+						name = lumbar_extension_2
+						position { min = -50 max = 30 squared_penalty = 1 }
+						threshold = 2
+						start_time = 1
+					}
+					
+					DofMeasure {
+						
+						weight = 0.01
+						threshold = 0.5
+						dof = knee_angle
+						force { min = 0 max = 0 abs_penalty = 1 }
+					}
+					
+				}
+			}		
+			
+			
+		}
+	}
+}
