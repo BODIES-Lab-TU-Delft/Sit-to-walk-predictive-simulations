@@ -25,8 +25,22 @@ We have performed several simulations that were not included in the original man
 
 *Tilted Seat Condition*
 
-
 https://github.com/BODIES-Lab-TU-Delft/Sit-to-walk-predictive-simulations/assets/18257841/a1cdc7e9-b389-440f-9bae-1c5d3cf56522
+
+*lower foot stiffness*
+
+
+https://github.com/BODIES-Lab-TU-Delft/Sit-to-walk-predictive-simulations/assets/18257841/e8545820-f5a6-4201-93ef-4416f8a0f059
+
+
+
+The model has been tested in conditions with reduced muscular vasti strength and unloading of the knee joint, which is described in more detail at:
+https://github.com/BODIES-Lab-TU-Delft/STW-case-study-unilateral-pain
+
+
+https://github.com/BODIES-Lab-TU-Delft/Sit-to-walk-predictive-simulations/assets/18257841/1e8289a7-4b6d-4513-a3c6-1d175d47db3b
+
+
 
 
 
