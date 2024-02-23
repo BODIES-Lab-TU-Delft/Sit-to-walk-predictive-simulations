@@ -20,4 +20,13 @@ https://github.com/BODIES-Lab-TU-Delft/Sit-to-walk-predictive-simulations/assets
 
 https://github.com/BODIES-Lab-TU-Delft/Sit-to-walk-predictive-simulations/assets/18257841/341d5a52-2f8c-4dab-b598-5b6bf286e451
 
+**Alternative simulations**
+We have performed several simulations that were not included in the original manuscript. 
+
+*Tilted Seat Condition*
+
+
+https://github.com/BODIES-Lab-TU-Delft/Sit-to-walk-predictive-simulations/assets/18257841/a1cdc7e9-b389-440f-9bae-1c5d3cf56522
+
+
 
